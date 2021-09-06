@@ -7,6 +7,11 @@ namespace MyMobileTrackerList.Models
 {
     public class MyMobileTracker
     {
+        public MyMobileTracker()
+        {
+            CurrentTime = DateTime.Now;
+            HitCount = 0;
+        }
         public int Id { get; set; }
         public int HitCount { get; set; }
         public DateTime CurrentTime { get; set; }
