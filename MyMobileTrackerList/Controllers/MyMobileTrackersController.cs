@@ -43,7 +43,7 @@ namespace MyMobileTrackerList.Controllers
         }
 
         [HttpPost] 
-        public ActionResult AjaxPush([Bind(Include = "Id, HitCount")] MyMobileTracker Mobiletracker)
+        public ActionResult AjaxPush(MyMobileTracker Mobiletracker)
         {
             if (ModelState.IsValid)
             {
@@ -56,7 +56,7 @@ namespace MyMobileTrackerList.Controllers
                 db.MyMobileTrackers.Add(Mobiletracker);
                 db.SaveChanges();
             }
-            return PartialView("Push");
+            return Json("Sucess");
         }
 
         // POST: MyMobileTrackers/Create

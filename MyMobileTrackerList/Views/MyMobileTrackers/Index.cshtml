@@ -8,10 +8,11 @@
 
 @using (Ajax.BeginForm("AjaxPush", "MyMobileTrackers", FormMethod.Post,null, new { id = "Test" }))
 { 
+    <input type="submit" class ="PushB" value="Start" id="btnStart" name="ButtonType"/>
+    <div class="btn btn-default" id="btnStartDiv"> Start </div>
 
- <input type="submit" class ="PushB" value="Start" id="btn" name="ButtonType"/>
-
-<!-- <input type="submit" value="Save"  id="btnSave" name="ButtonType"/>
+ <!--  <input type="submit" class ="PushB" value="Start" id="btnStart" name="ButtonType"/>
+   <input type="submit" value="Save"  id="btnSave" name="ButtonType"/>
  <input type="submit" value="Next"  id="btnNext" name="ButtonType" /> -->
 }
 
@@ -46,3 +47,30 @@
 }
 
 </table>
+
+
+        <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+
+     <script>
+    
+    $( "#btnStartDiv" ).click(function() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AjaxPush", "MyMobileTrackers")',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(100),
+            success: changeButton(),
+            error: function() { alert('A error'); }
+        });
+    });
+
+    function changeButton(){
+        $("#btnStart").css("background-color","green");
+        $("#btnStart").attr("value","Pushed");
+    } 
+
+    </script>
+    
+   
+
