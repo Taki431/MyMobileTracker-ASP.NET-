@@ -11,19 +11,7 @@
 <input type="button" value="Start" class="PushB" id="btnHitCounter" style="display:none"/>
 <p id="infoMessage" style="display:none"> You have <span id="countdowntimer">10 </span> Seconds</p>
 <input type="button" value="Refresh" class="PushB" id="btnRefresh"/>
-
-<!--
-@using (Ajax.BeginForm("AjaxPush", "MyMobileTrackers", FormMethod.Post,null, new { id = "Test" }))
-{ 
-    <div class="PushB" id="btnStart"> Start </div>
-
-    <div class="btn btn-default" id="btnStartDiv"> Start </div>
-    <input type="submit" class ="PushB" value="Start" id="btnStart" name="ButtonType"/>
-  <input type="submit" class ="PushB" value="Start" id="btnStart" name="ButtonType"/>
-   <input type="submit" value="Save"  id="btnSave" name="ButtonType"/>
- <input type="submit" value="Next"  id="btnNext" name="ButtonType" /> 
-}
--->
+<p id="scoreBar" style= "display: none"> <div id="UserID"></div>  <progress id="pbar"/>  </p>
 
 
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>

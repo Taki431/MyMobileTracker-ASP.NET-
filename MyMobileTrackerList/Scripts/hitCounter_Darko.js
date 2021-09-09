@@ -1,6 +1,8 @@
 ﻿var counter = 0;
 var done = 0;
 var downloadTimer = 0;
+var curval = 0;
+var maxval = 0;
 
 $("#btnStart").click(function () {
     console.log("Enabled");
@@ -29,7 +31,7 @@ $("#btnRefresh").click(function () {
     document.getElementById("countdowntimer").textContent = 10;
     clearInterval(downloadTimer);
     counter = 0;
-    done = 1;
+    done = 0;
 });
 
 function countDown(timeleft) {
@@ -62,9 +64,30 @@ function callSuccess() {
     $("#btnHitCounter").attr("value", "Done");
     $("#btnHitCounter").text("Done");
     console.log("total number of clicks:" + counter);
+    updateProgressBar();
     counter = 0;
     done = 1;
     console.log("reset counter:" + counter);
 }
 
+function updateProgressBar() {
+    $.ajax({
+        type: "GET",
+        url: "./MyMobileTrackers/AjaxGet",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (args) {
+            console.log('return call back')
+            console.log(args)
+            //updateScores(data)
+        },
+        error: function () { alert('A error'); }
+    });
+}
 
+function updateScores(data) {
+    console.log("Update Score!")
+    console.log(data);
+    $("#pbar").max = data.maxval;
+    $("#pbar").val = counter;
+}
