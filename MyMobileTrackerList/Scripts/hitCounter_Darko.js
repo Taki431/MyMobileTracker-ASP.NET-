@@ -1,4 +1,6 @@
 ﻿var counter = 0;
+var done = 0;
+var downloadTimer = 0;
 
 $("#btnStart").click(function () {
     console.log("Enabled");
@@ -6,9 +8,32 @@ $("#btnStart").click(function () {
     $("#btnHitCounter").css("background-color", "green");
     $("#btnHitCounter").attr("value", "Push");
     $("#infoMessage").css("display", "block");
+    countDown(10);
 
-    var timeleft = 10;
-    var downloadTimer = setInterval(function () {
+});
+
+$("#btnHitCounter").click(function () {
+    if (!done)
+    {
+        counter++;
+        console.log(counter);
+    }
+});
+
+$("#btnRefresh").click(function () {
+    console.log("Refresh!");
+    $("#btnHitCounter").css("display", "block");
+    $("#btnHitCounter").css("background-color", "green");
+    $("#btnHitCounter").attr("value", "Push");
+    $("#infoMessage").css("display", "block");
+    document.getElementById("countdowntimer").textContent = 10;
+    clearInterval(downloadTimer);
+    counter = 0;
+    done = 1;
+});
+
+function countDown(timeleft) {
+        downloadTimer = setInterval(function () {
         timeleft--;
         document.getElementById("countdowntimer").textContent = timeleft;
         if (timeleft <= 0) {
@@ -16,12 +41,7 @@ $("#btnStart").click(function () {
             clearInterval(downloadTimer);
         }
     }, 1000);
-});
-
-$("#btnHitCounter").click(function () {
-    counter++;
-    console.log(counter);
-});
+}
 
 function sendCounter() {
     $.ajax({
@@ -43,6 +63,7 @@ function callSuccess() {
     $("#btnHitCounter").text("Done");
     console.log("total number of clicks:" + counter);
     counter = 0;
+    done = 1;
     console.log("reset counter:" + counter);
 }
 
