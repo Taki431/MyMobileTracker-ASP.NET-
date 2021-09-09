@@ -43,20 +43,25 @@ namespace MyMobileTrackerList.Controllers
         }
 
         [HttpPost] 
-        public ActionResult AjaxPush(MyMobileTracker Mobiletracker)
+        public ActionResult AjaxPush(int hitcount)
         {
+            MyMobileTracker Mobiletracker = new MyMobileTracker();
             if (ModelState.IsValid)
             {
                 string currentUserId = User.Identity.GetUserId();
-                ApplicationUser currentUser = db.Users.FirstOrDefault
-                    (x => x.Id == currentUserId);
-
+                // ApplicationUser currentUser = db.Users.FirstOrDefault
+                //     (x => x.Id == currentUserId);
+                var currentUser = db.Set<ApplicationUser>().Find(currentUserId);
+                //ApplicanionUser currentUser = db.Set<ApplicationUser>().Find(currentUserId);
                 Mobiletracker.User = currentUser;
-                Mobiletracker.HitCount += 1;
+                System.Diagnostics.Debug.WriteLine(hitcount);
+                Console.WriteLine(hitcount);
+                Mobiletracker.HitCount = hitcount;
                 db.MyMobileTrackers.Add(Mobiletracker);
+                //db.Entry(Mobiletracker).State = EntityState.Modified;
                 db.SaveChanges();
             }
-            return Json("Sucess");
+            return Json(Mobiletracker.HitCount);
         }
 
         // POST: MyMobileTrackers/Create

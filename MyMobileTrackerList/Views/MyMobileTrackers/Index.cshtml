@@ -5,17 +5,28 @@
 }
 
 <h2>Index</h2>
+<p>The time left is <span id="counter"></span>.</p>
+<input type = "button" value = "Start" class="PushB" id="btnStart"/>
+<p> The current hit count is <span id ="hitcount"></span>.</p>
+<input type="button" value="Start" class="PushB" id="btnHitCounter" style="display:none"/>
+<p id="infoMessage" style="display:none"> You have 60 second <span id="countdowntimer">10 </span> Seconds</p>
 
+<!--
 @using (Ajax.BeginForm("AjaxPush", "MyMobileTrackers", FormMethod.Post,null, new { id = "Test" }))
 { 
-    <input type="submit" class ="PushB" value="Start" id="btnStart" name="ButtonType"/>
+    <div class="PushB" id="btnStart"> Start </div>
+
     <div class="btn btn-default" id="btnStartDiv"> Start </div>
-
- <!--  <input type="submit" class ="PushB" value="Start" id="btnStart" name="ButtonType"/>
+    <input type="submit" class ="PushB" value="Start" id="btnStart" name="ButtonType"/>
+  <input type="submit" class ="PushB" value="Start" id="btnStart" name="ButtonType"/>
    <input type="submit" value="Save"  id="btnSave" name="ButtonType"/>
- <input type="submit" value="Next"  id="btnNext" name="ButtonType" /> -->
+ <input type="submit" value="Next"  id="btnNext" name="ButtonType" /> 
 }
+-->
 
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/hitCounter_Darko.js"></script>
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
@@ -47,30 +58,4 @@
 }
 
 </table>
-
-
-        <script src="~/Scripts/jquery-3.4.1.min.js"></script>
-
-     <script>
-    
-    $( "#btnStartDiv" ).click(function() {
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("AjaxPush", "MyMobileTrackers")',
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            data: JSON.stringify(100),
-            success: changeButton(),
-            error: function() { alert('A error'); }
-        });
-    });
-
-    function changeButton(){
-        $("#btnStart").css("background-color","green");
-        $("#btnStart").attr("value","Pushed");
-    } 
-
-    </script>
-    
-   
 
