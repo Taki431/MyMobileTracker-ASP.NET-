@@ -10,7 +10,8 @@ $("#btnStart").click(function () {
     $("#btnHitCounter").css("background-color", "green");
     $("#btnHitCounter").attr("value", "Push");
     $("#infoMessage").css("display", "block");
-    countDown(10);
+    //countDown(10); 
+    countDown(3);
 
 });
 
@@ -35,7 +36,8 @@ $("#btnRefresh").click(function () {
 });
 
 function countDown(timeleft) {
-        downloadTimer = setInterval(function () {
+    downloadTimer = setInterval(function () {
+        console.log("countDown Start!");
         timeleft--;
         document.getElementById("countdowntimer").textContent = timeleft;
         if (timeleft <= 0) {
@@ -65,29 +67,30 @@ function callSuccess() {
     $("#btnHitCounter").text("Done");
     console.log("total number of clicks:" + counter);
     updateProgressBar();
-    counter = 0;
     done = 1;
     console.log("reset counter:" + counter);
 }
 
 function updateProgressBar() {
+    
     $.ajax({
         type: "GET",
         url: "./MyMobileTrackers/AjaxGet",
-        contentType: "application/json; charset=utf-8",
+        contentType: "application/json;",
         dataType: "json",
-        success: function (args) {
-            console.log('return call back')
-            console.log(args)
-            //updateScores(data)
+        success: function (data) {
+            console.log("success!" + data)
+            updateScores(data)
         },
-        error: function () { alert('A error'); }
+        error: function (e) { alert('A error1'); console.log(e) }
     });
+    
+    
 }
 
 function updateScores(data) {
-    console.log("Update Score!")
-    console.log(data);
-    $("#pbar").max = data.maxval;
-    $("#pbar").val = counter;
+    console.log("Update Score!" + data + counter) 
+    $("#pbar")[0].max = data;
+    $("#pbar")[0].value = counter;
+    counter = 0;
 }

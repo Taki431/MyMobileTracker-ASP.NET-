@@ -63,7 +63,35 @@ namespace MyMobileTrackerList.Controllers
             }
             return Json(Mobiletracker.HitCount);
         }
+        /*
+        [HttpGet]
+        public ActionResult AjaxGet()
+        {
+            if (ModelState.IsValid)
+            {
+                string currentUserId = User.Identity.GetUserId();
+                var currentUser = db.Set<ApplicationUser>().Find(currentUserId);
 
+                var maxval = db.MyMobileTrackers.OrderByDescending(m => m.HitCount).First();
+                return Json(maxval);
+            }
+            return Json(null);
+        }
+        */
+
+        [HttpGet]
+        public int AjaxGet()
+        {
+            if (ModelState.IsValid)
+            {
+                string currentUserId = User.Identity.GetUserId();
+                var currentUser = db.Set<ApplicationUser>().Find(currentUserId);
+
+                var maxval = db.MyMobileTrackers.OrderByDescending(m => m.HitCount).First();
+                return maxval.HitCount;
+            }
+            return -1;
+        }
         // POST: MyMobileTrackers/Create
         // 초과 게시 공격으로부터 보호하려면 바인딩하려는 특정 속성을 사용하도록 설정하세요. 
         // 자세한 내용은 https://go.microsoft.com/fwlink/?LinkId=317598을(를) 참조하세요.
