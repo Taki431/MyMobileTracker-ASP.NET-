@@ -8,12 +8,21 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MyMobileTrackerList.Models;
+using System.Diagnostics;
+using System.Security.Claims;
+using System.Security.Principal;
 
 namespace MyMobileTrackerList.Controllers
 {
     public class MyMobileTrackersController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public MyMobileTrackersController(UserManager<ApplicationUser> userManager)
+        {
+            _userManager = userManager;
+        }
 
         // GET: MyMobileTrackers
         public ActionResult Index()
@@ -48,12 +57,14 @@ namespace MyMobileTrackerList.Controllers
             MyMobileTracker Mobiletracker = new MyMobileTracker();
             if (ModelState.IsValid)
             {
-                string currentUserId = User.Identity.GetUserId();
-                // ApplicationUser currentUser = db.Users.FirstOrDefault
-                //     (x => x.Id == currentUserId);
-                var currentUser = db.Set<ApplicationUser>().Find(currentUserId);
+                //var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                //string currentUserId = User.Identity.GetUserId();
+                //var currentUserId = User.Identity.GetUserId(HttpContext.User);
+                var currentUser = db.Users.FirstOrDefault
+                     (x => x.Email == System.Web.HttpContext.Current.User.Identity.Name).Id;
+                //var currentUser = db.Set<ApplicationUser>().Find(currentUserId);
                 //ApplicanionUser currentUser = db.Set<ApplicationUser>().Find(currentUserId);
-                Mobiletracker.User = currentUser;
+                Mobiletracker.User.Id = currentUser;
                 System.Diagnostics.Debug.WriteLine(hitcount);
                 Console.WriteLine(hitcount);
                 Mobiletracker.HitCount = hitcount;
@@ -67,13 +78,15 @@ namespace MyMobileTrackerList.Controllers
         [HttpGet]
         public ActionResult AjaxGet()
         {
+
             if (ModelState.IsValid)
             {
-                string currentUserId = User.Identity.GetUserId();
-                var currentUser = db.Set<ApplicationUser>().Find(currentUserId);
+                //string currentUserId = User.Identity.GetUserId();
+                //var currentUser = db.Set<ApplicationUser>().Find(currentUserId);
 
-                var maxval = db.MyMobileTrackers.OrderByDescending(m => m.HitCount).First();
-                return Json(maxval);
+                var mobiletracker = db.MyMobileTrackers.OrderByDescending(m => m.HitCount).Take(10);
+                
+                return Json(mobiletracker);
             }
             return Json(null);
         }
@@ -82,13 +95,32 @@ namespace MyMobileTrackerList.Controllers
         [HttpGet]
         public int AjaxGet()
         {
+            string[] nameLists = new string[10];
+            int[] idLists = new int[10];
+            int[] countsLists = new int[10];
+            int i = 0;
             if (ModelState.IsValid)
             {
-                string currentUserId = User.Identity.GetUserId();
-                var currentUser = db.Set<ApplicationUser>().Find(currentUserId);
+                //string currentUserId = User.Identity.GetUserId();
+                //var currentUser = db.Set<ApplicationUser>().Find(currentUserId);
 
-                var maxval = db.MyMobileTrackers.OrderByDescending(m => m.HitCount).First();
-                return maxval.HitCount;
+                // var maxval = db.MyMobileTrackers.OrderByDescending(m => m.HitCount).First();
+                var mobiletracker = db.MyMobileTrackers.OrderByDescending(m => m.HitCount).Take(10).ToList();
+                //Console.WriteLine(mobiletracker);
+                foreach (var item in mobiletracker)
+                {
+                    idLists[i] = item.Id;
+                    countsLists[i] = item.HitCount;
+                    Console.WriteLine(item.Id.ToString());
+                    //var currentUser = db.Set<ApplicationUser>().Find(item.Id.ToString());
+                    Debug.WriteLine("Id" + item.Id.ToString());
+                    nameLists[i] = db.Set<ApplicationUser>().Find(item.Id.ToString()).UserName;
+                    i++;
+                }
+                
+
+                return 0;
+                //return mobiletracker.HitCount;
             }
             return -1;
         }
