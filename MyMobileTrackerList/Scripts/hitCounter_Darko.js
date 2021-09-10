@@ -3,16 +3,24 @@ var done = 0;
 var downloadTimer = 0;
 var curval = 0;
 var maxval = 0;
+var timer = 5
+var start = 1;
 
 $("#btnStart").click(function () {
-    console.log("Enabled");
-    $("#btnHitCounter").css("display", "block");
-    $("#btnHitCounter").css("background-color", "green");
-    $("#btnHitCounter").attr("value", "Push");
-    $("#infoMessage").css("display", "block");
-    //countDown(10); 
-    countDown(3);
-
+    if (start)
+    {
+        console.log("Enabled");
+        $("#btnHitCounter").css("display", "block");
+        $("#btnHitCounter").css("background-color", "green");
+        $("#btnHitCounter").attr("value", "Push");
+        $("#infoMessage").css("display", "block");
+        //countDown(10); 
+        start = 0;
+        done = 0;
+        counter = 0;
+        countDown(timer);
+        
+    }
 });
 
 $("#btnHitCounter").click(function () {
@@ -29,15 +37,15 @@ $("#btnRefresh").click(function () {
     $("#btnHitCounter").css("background-color", "green");
     $("#btnHitCounter").attr("value", "Push");
     $("#infoMessage").css("display", "block");
-    document.getElementById("countdowntimer").textContent = 10;
+    document.getElementById("countdowntimer").textContent = timer;
     clearInterval(downloadTimer);
     counter = 0;
-    done = 0;
+    start = 1;
 });
 
 function countDown(timeleft) {
     downloadTimer = setInterval(function () {
-        console.log("countDown Start!");
+        console.log("countDown" + " " + timeleft + " " + "!");
         timeleft--;
         document.getElementById("countdowntimer").textContent = timeleft;
         if (timeleft <= 0) {
@@ -68,6 +76,7 @@ function callSuccess() {
     console.log("total number of clicks:" + counter);
     updateProgressBar();
     done = 1;
+    start = 1;
     console.log("reset counter:" + counter);
 }
 
@@ -89,7 +98,7 @@ function updateProgressBar() {
 }
 
 function updateScores(data) {
-    console.log("Update Score!" + data + counter) 
+    console.log("Update Score!" + data + " "+ counter) 
     $("#pbar")[0].max = data;
     $("#pbar")[0].value = counter;
     counter = 0;
