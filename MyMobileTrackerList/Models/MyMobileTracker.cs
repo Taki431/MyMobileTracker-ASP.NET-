@@ -15,6 +15,6 @@ namespace MyMobileTrackerList.Models
         public int Id { get; set; }
         public int HitCount { get; set; }
         public DateTime CurrentTime { get; set; }
-        public ApplicationUser User { get; set; }
+        public string User_Id { get; set; }
     }
 }
