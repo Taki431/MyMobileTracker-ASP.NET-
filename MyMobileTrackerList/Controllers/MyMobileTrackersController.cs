@@ -47,17 +47,30 @@ namespace MyMobileTrackerList.Controllers
         [HttpPost]
         public ActionResult AjaxPush(int hitcount)
         {
-            MyMobileTracker Mobiletracker = new MyMobileTracker();
             if (ModelState.IsValid)
             {
                 var UserId = GetUser();
-                Mobiletracker.HitCount = hitcount;
-                Mobiletracker.User_Id = UserId;
-                db.MyMobileTrackers.Add(Mobiletracker);
-                //db.Entry(Mobiletracker).State = EntityState.Modified;
+                var currentUser = db.MyMobileTrackers.Where(m => m.User_Id == UserId).FirstOrDefault();
+
+                if (currentUser == null)
+                {
+                    MyMobileTracker Mobiletracker = new MyMobileTracker();
+                    Mobiletracker.HitCount = hitcount;
+                    Mobiletracker.User_Id = UserId;
+                    db.MyMobileTrackers.Add(Mobiletracker);
+                    //db.Entry(Mobiletracker).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return Json(-1);
+                }
+
+                if (currentUser.HitCount > hitcount)
+                    return Json(-1);
+                var currenthitcount = currentUser.HitCount;
+                currentUser.HitCount = hitcount;
                 db.SaveChanges();
+
             }
-            return Json(Mobiletracker.HitCount);
+            return Json(-1);
         }
 
         [HttpGet]
@@ -69,25 +82,19 @@ namespace MyMobileTrackerList.Controllers
             //int i = 0;
             if (ModelState.IsValid)
             {
-                //string currentUserId = User.Identity.GetUserId();
-                //var currentUser = db.Set<ApplicationUser>().Find(currentUserId);
-
-                 var maxval = db.MyMobileTrackers.OrderByDescending(m => m.HitCount).First();
-                 var mobiletracker = db.MyMobileTrackers.OrderByDescending(m => m.HitCount).Take(10);
-                 var listbla = mobiletracker.ToList();
-                ////Console.WriteLine(mobiletracker);
-                //foreach (var item in mobiletracker)
-                //{
-                //    idLists[i] = item.Id;
-                //    countsLists[i] = item.HitCount;
-                //    Console.WriteLine(item.Id.ToString());
-                //    //var currentUser = db.Set<ApplicationUser>().Find(item.Id.ToString());
-                //    //Debug.WriteLine("Id" + item.Id.ToString());
-                //    nameLists[i] = db.Set<ApplicationUser>().Find(item.Id.ToString()).UserName;
-                //    i++;
-                //}
+                var mobiletracker = db.MyMobileTrackers.OrderByDescending(m => m.HitCount).Take(5);
+                var listbla = mobiletracker.ToList();
+                int i = 0;
+                
+                foreach (var item in listbla)
+                {
+                    idLists[i] = item.Id;
+                    countsLists[i] = item.HitCount;
+                    var currentUser = db.Set<ApplicationUser>().Find(item.User_Id.ToString());
+                    nameLists[i] = currentUser.UserName;
+                    i++;
+                }
                 return 0;
-                //return mobiletracker.HitCount;
             }
             return -1;
         }

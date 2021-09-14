@@ -50,6 +50,7 @@ function countDown(timeleft) {
         document.getElementById("countdowntimer").textContent = timeleft;
         if (timeleft <= 0) {
             sendCounter(counter);
+            updateProgressBar();
             clearInterval(downloadTimer);
         }
     }, 1000);
@@ -64,7 +65,14 @@ function sendCounter() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         data: JSON.stringify({ 'hitcount': counter }),
-        success: callSuccess(),
+        success: function (dataCheck) {
+            if (dataCheck == '-1') {
+                console.log("The click hasn't been updated since it's less than the highest score.");
+            }
+            else {
+                callSuccess()
+            }
+        },
         error: function () { alert('A error'); }
     });
 }
@@ -73,12 +81,13 @@ function callSuccess() {
     $("#btnHitCounter").css("background-color", "grey");
     $("#btnHitCounter").attr("value", "Done");
     $("#btnHitCounter").text("Done");
+
     console.log("total number of clicks:" + counter);
-    updateProgressBar();
     done = 1;
     start = 1;
     console.log("reset counter:" + counter);
 }
+
 
 function updateProgressBar() {
     
@@ -92,10 +101,9 @@ function updateProgressBar() {
             updateScores(data)
         },
         error: function (e) { alert('A error1'); console.log(e) }
-    });
-    
-    
+    });    
 }
+
 
 function updateScores(data) {
     console.log("Update Score!" + data + " "+ counter) 
