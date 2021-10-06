@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -9,6 +10,8 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MyMobileTrackerList.Models;
+using Newtonsoft.Json;
+using RestSharp;
 
 namespace MyMobileTrackerList.Controllers
 {
@@ -74,29 +77,30 @@ namespace MyMobileTrackerList.Controllers
         }
 
         [HttpGet]
-        public int AjaxGet()
+        public IList AjaxGet()
         {
-            string[] nameLists = new string[10];
-            int[] idLists = new int[10];
-            int[] countsLists = new int[10];
-            //int i = 0;
+            var totallist = new JsonArray();
             if (ModelState.IsValid)
             {
                 var mobiletracker = db.MyMobileTrackers.OrderByDescending(m => m.HitCount).Take(5);
                 var listbla = mobiletracker.ToList();
-                int i = 0;
                 
                 foreach (var item in listbla)
                 {
-                    idLists[i] = item.Id;
-                    countsLists[i] = item.HitCount;
+
                     var currentUser = db.Set<ApplicationUser>().Find(item.User_Id.ToString());
-                    nameLists[i] = currentUser.UserName;
-                    i++;
+                    var personallist = new JsonArray();
+
+                    personallist.Add(item.Id);
+                    personallist.Add(item.HitCount);
+                    personallist.Add(currentUser.UserName);
+                    totallist.Add(personallist);
                 }
-                return 0;
+                //return (IList)Json(totallist);
+                return totallist;
             }
-            return -1;
+            //return (IList)Json(totallist);
+            return totallist;
         }
 
         // POST: MyMobileTrackers/Create

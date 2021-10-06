@@ -97,7 +97,8 @@ function updateProgressBar() {
         contentType: "application/json;",
         dataType: "json",
         success: function (data) {
-            console.log("success!" + data)
+            console.log("success!")
+            drawTable(data)
             updateScores(data)
         },
         error: function (e) { alert('A error1'); console.log(e) }
@@ -106,8 +107,36 @@ function updateProgressBar() {
 
 
 function updateScores(data) {
-    console.log("Update Score!" + data + " "+ counter) 
-    $("#pbar")[0].max = data;
-    $("#pbar")[0].value = counter;
+    //var bar = document.querySelectorAll('#orderBody');
+    for (i = 0; i < data.length; i++)
+    {
+        pbarid = "#pbar" + i;
+        $(pbarid)[0].max = data[0][1];
+        $(pbarid)[0].value = data[i][1];
+    }
+    //$("#pbar")[0].value = 20;
     counter = 0;
 }
+
+function drawTable(data) {
+
+    for (i = 0; i < data.length; i++)
+    {
+        var maxHitCount = data[0][1];
+        var htmlRow="<tr>"
+        var item = data[i];
+        //htmlRow += '<td><p class="scoreBar" style="display: none">';
+        htmlRow += '<td>';
+        
+        var bar = document.createElement('progress');
+        bar.id = 'pbar' + i;
+        htmlRow += bar.outerHTML;
+        htmlRow += '</p></td>';
+
+        htmlRow += "<td>" + data[i][1] + "</td>";
+        htmlRow += "<td>" + data[i][2] + "</td>";
+        htmlRow+="</tr>"
+
+        $("#orderBody").append(htmlRow);
+    }
+}    
